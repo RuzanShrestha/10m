@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Passcode</title>
+    <!-- Fallback cute font, replace with your local 'Lilac from Pastel Skies' if you have the file -->
+    <link href="https://fonts.googleapis.com/css2?family=Delius&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f1a7b9; /* Soft pink from the image */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Delius', cursive; /* Replace with your Lilac font */
+        }
+        .container {
+            text-align: center;
+            color: white;
+        }
+        h2 {
+            font-weight: normal;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+        .passcode-boxes {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+        .box {
+            width: 30px;
+            height: 35px;
+            border: 3px solid white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background: transparent;
+        }
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 250px;
+            margin: 0 auto;
+        }
+        .key {
+            width: 65px;
+            height: 65px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            color: #555;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            user-select: none;
+            transition: transform 0.1s;
+        }
+        .key:active {
+            transform: scale(0.95);
+        }
+        .key.special {
+            color: #d17a8d;
+        }
+        .shake {
+            animation: shake 0.4s;
+        }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="lock-container">
+    <h2>Enter a passcode</h2>
+    <div class="passcode-boxes" id="boxes">
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+    </div>
+
+    <div class="keypad" id="keypad">
+        <div class="key" onclick="press('1')">1</div>
+        <div class="key" onclick="press('2')">2</div>
+        <div class="key" onclick="press('3')">3</div>
+        <div class="key" onclick="press('4')">4</div>
+        <div class="key" onclick="press('5')">5</div>
+        <div class="key" onclick="press('6')">6</div>
+        <div class="key" onclick="press('7')">7</div>
+        <div class="key" onclick="press('8')">8</div>
+        <div class="key" onclick="press('9')">9</div>
+        <div class="key special">*</div>
+        <div class="key" onclick="press('0')">0</div>
+        <div class="key special">#</div>
+    </div>
+</div>
+
+<script>
+    const CORRECT_PASSCODE = "05112025";
+    let currentInput = "";
+    const boxes = document.querySelectorAll('.box');
+
+    function press(num) {
+        if (currentInput.length < 8) {
+            currentInput += num;
+            updateBoxes();
+        }
+
+        if (currentInput.length === 8) {
+            setTimeout(checkPasscode, 200);
+        }
+    }
+
+    function updateBoxes() {
+        boxes.forEach((box, index) => {
+            if (index < currentInput.length) {
+                box.textContent = "•"; 
+            } else {
+                box.textContent = "";
+            }
+        });
+    }
+
+    function checkPasscode() {
+        if (currentInput === CORRECT_PASSCODE) {
+            window.location.href = "letter.html";
+        } else {
+            const container = document.getElementById('lock-container');
+            container.classList.add('shake');
+            setTimeout(() => {
+                container.classList.remove('shake');
+                currentInput = "";
+                updateBoxes();
+            }, 400);
+        }
+    }
+</script>
+
+</body>
+</html>
+

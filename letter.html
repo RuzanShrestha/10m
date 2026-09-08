@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Anushka</title>
+    <!-- New Fonts from your snippet -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* 1. INITIAL MONOCHROME STATE */
+            --glow-opacity: 0;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --card-border: rgba(42, 42, 42, 1);
+            --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            --card-blur: blur(0px);
+            
+            --text-initial: #4a4a4a;     /* Dim grey text */
+            --flower-color: transparent; /* Flowers are hidden */
+            --trigger-color: #6a6a6a;    /* Slightly lighter for the button */
+            --heart-opacity: 0;          /* Hearts hidden initially */
+        }
+
+        body.magic-activated {
+            /* 2. THE MAGICAL REVEAL (Using your exact color scheme) */
+            --glow-opacity: 1;
+            --card-bg: rgba(255, 255, 255, 0.78);
+            --card-border: rgba(255, 182, 193, 0.45);
+            --card-shadow: 0 16px 40px rgba(229, 107, 143, 0.12), 0 4px 16px rgba(0, 0, 0, 0.03);
+            --card-blur: blur(14px);
+            
+            --flower-color: #e56b8f; /* Your --pink-accent */
+            --heart-opacity: 1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #1a1a1a; /* Solid dark start */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 24px;
+            font-family: "CK Jot", "Caveat", cursive, sans-serif;
+            position: relative;
+            overflow-x: hidden;
+            font-size: 1.45rem; /* Matched your typography scale */
+        }
+
+        /* The smooth gradient fade-in trick */
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #fff0f3 0%, #fde2e4 50%, #fad2e1 100%);
+            opacity: 0;
+            transition: opacity 5s ease;
+            z-index: -2;
+        }
+
+        body.magic-activated::after {
+            opacity: 1;
+        }
+
+        /* Ambient soft glow from your snippet */
+        .ambient-glow {
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(255, 192, 203, 0.45) 0%, transparent 70%);
+            filter: blur(60px);
+            z-index: -1;
+            pointer-events: none;
+            opacity: var(--glow-opacity);
+            transition: opacity 5s ease;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            width: 100%;
+            background: var(--card-bg);
+            border: 1.5px solid var(--card-border);
+            border-radius: 28px;
+            padding: 44px 38px;
+            backdrop-filter: var(--card-blur);
+            box-shadow: var(--card-shadow);
+            transition: all 5s ease;
+        }
+
+        p {
+            color: var(--text-initial);
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-weight: 500;
+            transition: color 2s ease-in-out;
+            position: relative;
+            z-index: 1; 
+        }
+
+        /* The cascading text reveal to your --text-main color */
+        p.reveal-text {
+            color: #4a3b40; 
+        }
+
+        /* The Trigger Button */
+        .magic-trigger {
+            color: var(--trigger-color);
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-underline-offset: 4px;
+            transition: all 0.5s ease;
+        }
+
+        .magic-trigger:hover {
+            color: #888888;
+        }
+        
+        .magic-trigger.activated {
+            background-color: #b3395d; /* Your --pink-deep */
+            color: #ffffff; 
+            border-radius: 8px;
+            padding: 2px 8px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(229, 107, 143, 0.4);
+        }
+        
+        /* The hidden flower separators */
+        .flower-sep {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+            color: var(--flower-color);
+            font-size: 24px;
+            transition: color 5s ease;
+        }
+        
+        .flower-sep::before,
+        .flower-sep::after {
+            content: "";
+            flex: 1;
+            height: 1.5px;
+            background: var(--flower-color);
+            margin: 0 15px;
+            transition: background 5s ease;
+        }
+
+        /* Floating hearts container & animations */
+        .hearts-wrapper {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            opacity: var(--heart-opacity);
+            transition: opacity 5s ease; /* Fades in with the magic */
+        }
+
+        .floating-heart {
+            position: absolute;
+            bottom: -30px;
+            user-select: none;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.7) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.65; }
+            80% { opacity: 0.5; }
+            100% { transform: translateY(-110vh) scale(1.15) rotate(25deg); opacity: 0; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 34px 22px; }
+            p { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- The new magical elements -->
+<div class="ambient-glow"></div>
+
+<div class="hearts-wrapper">
+    <div class="floating-heart" style="left: 2%; font-size: 14px; animation-duration: 4.2s; animation-delay: 0.1s; color: #f7a8b8;">♥</div>
+    <div class="floating-heart" style="left: 6%; font-size: 22px; animation-duration: 6.5s; animation-delay: 1.8s; color: #e56b8f;">♥</div>
+    <div class="floating-heart" style="left: 13%; font-size: 26px; animation-duration: 7.2s; animation-delay: 0.5s; color: #f4a6b8;">♥</div>
+    <div class="floating-heart" style="left: 25%; font-size: 24px; animation-duration: 6.8s; animation-delay: 2.9s; color: #ffb7c5;">♥</div>
+    <div class="floating-heart" style="left: 34%; font-size: 25px; animation-duration: 6.9s; animation-delay: 1.4s; color: #e56b8f;">♥</div>
+    <div class="floating-heart" style="left: 47%; font-size: 28px; animation-duration: 7.5s; animation-delay: 4.5s; color: #ffccd5;">♥</div>
+    <div class="floating-heart" style="left: 59%; font-size: 24px; animation-duration: 6.6s; animation-delay: 1.0s; color: #f4a6b8;">♥</div>
+    <div class="floating-heart" style="left: 72%; font-size: 27px; animation-duration: 7.1s; animation-delay: 4.3s; color: #ffb7c5;">♥</div>
+    <div class="floating-heart" style="left: 84%; font-size: 25px; animation-duration: 6.7s; animation-delay: 3.8s; color: #f7a8b8;">♥</div>
+    <div class="floating-heart" style="left: 96%; font-size: 26px; animation-duration: 7.0s; animation-delay: 2.6s; color: #ffccd5;">♥</div>
+</div>
+
+<main class="container">
+    <p>Dear Wifey,</p>
+    
+    <p>Happy 10 months baby<br>
+    I love you so much. Time has been flying right past us, hasnt it? And I am glad i get to spend mine with you. There is no other way i would be spending my time and my life.</p>
+    
+    <p>You deserve all the happiness in the world and I will always do my best to make you as happy as i can.</p>
+    
+    <!-- These flowers remain hidden until clicked -->
+    <div class="flower-sep">✿</div>
+    
+    <p>This month was tough, like a tough teacher to me but one of the gentlest things I learnt this month is that I am so glad to have you by my side and i could not ask for anything else. This month really just went right by but i am so happy that i had you each and every moment. You are so perfect. You are the best thing to ever happen to me. <span class="magic-trigger" id="color-btn">You are the colors in my life honestly</span>, every evening I waited to call you so that i can be with you, so that i can be happy cause i am only happy in my life with you. Thank you so much for staying with me through thick and thin.</p>
+    
+    <p>Another lesson that this month has taught me is that you will be with me through everything and i will never take that for granted. Am i crying while writing this? Yes. I just hope that I can give you this in time. This month has been a beating and a half to me but honestly every month has kind of been getting worse, I hope it gets better now and i know it will because I have you.</p>
+    
+    <p>One of the things that stuck with me this month is that its " us against the world " thinking of you saying that really makes me feel safe and sound. It makes me feel like we are in this together and it empowers me whilst also making me feel looked after. It really is the best feeling ever it makes me feel like i will always be caught when i fall. it makes me feel safe.</p>
+
+    <div class="flower-sep">✿</div>
+
+    <p>You are my home and you are my safe place. I feel the safest when I am with you. You are my home i cannot live without you. You are the reason i do not have so many bad thoughts. You are the reason I will do my best until the very end. I always love you so much. I am bawling my eyes out. I am actually crying every day at this point but you always leave me with a smile. I love you so much.</p>
+    
+    <p>I am always so excited and am always waiting to call you. I love you so much. I am sorry for the delay in delivering this. I was so sad when i reaslised that i had really missed such a vital milestone, i cant even tell how. I wish someday I can make you as happy as you make me.</p>
+    
+    <p>Happy 10 months again, from here on out all the monthsaries are going to be double digits hahaha, I am happy that I got to spend every second i got to spend with you anushka. I want this thing to be a proof that i will always do my best to keep you happy and will always give you my efforts no matter what.</p>
+    
+    <p>You mean so much to me anushka so much, you are the world to me.</p>
+    
+    <div class="flower-sep">✿</div>
+    
+    <p>I want you to know that I will always be with you no matter what too, just like a team just like a team cause we are a team. Just like u said, always feel free to rely on me hai. We are a team and i will always be there for you. Honestly those words really will stick with me and it is so sweet every time you remind me that i feel better and happier.</p>
+    
+    <p>Happy 10 months, the biggest lesson i learnt this month is that i love you very much and you love me so so so much and our love for eachother is forever growing.</p>
+    
+    <p>Yours Hubby ♥</p>
+</main>
+
+<script>
+    document.getElementById('color-btn').addEventListener('click', function() {
+        // 1. Swap the CSS variables to reveal the beautiful Gradient & Heart theme
+        document.body.classList.add('magic-activated');
+        
+        // 2. Highlight the button itself in your deep pink
+        this.classList.add('activated');
+
+        // 3. Select all paragraphs
+        const paragraphs = document.querySelectorAll('.container p');
+        
+        // 4. Cascade the text reveal to your dark brown/purple text color
+        paragraphs.forEach((p, index) => {
+            setTimeout(() => {
+                p.classList.add('reveal-text');
+            }, index * 300); 
+        });
+    });
+</script>
+
+</body>
+</html>
